@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "mesh dev"
+    "dev": "mesh dev -r dotenv/config",
+    "build": "mesh build",
+    "start": "mesh start"
   },
   "dependencies": {
     "@envelop/core": "^4.0.3",
@@ -13,6 +15,7 @@
     "@graphql-mesh/transform-naming-convention": "^0.95.8",
     "@graphql-mesh/transform-prefix": "^0.95.8",
     "@graphql-mesh/transform-rename": "^0.95.6",
+    "dotenv": "^16.3.1",
     "graphql": "^16.8.1"
   }
 }
