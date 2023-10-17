@@ -3,7 +3,7 @@ sources:
     handler:
       grpc:
         source: ./enquete.proto
-        endpoint: localhost:50051
+        endpoint: '{env.GRPC_SERVER_HOST}:{env.GRPC_SERVER_PORT}'
         # metaData:
         metaData:
           # authorization: 'Bearer {context.headers['x-my-token']}'
