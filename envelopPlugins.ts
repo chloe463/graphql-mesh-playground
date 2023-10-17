@@ -1,5 +1,4 @@
 import { useExtendContext } from "@envelop/core";
-import { MeshPlugin } from "@graphql-mesh/types";
 
 const myPlugin = {
 	onExecue: (v) => {
