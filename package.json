@@ -1,0 +1,18 @@
+{
+  "name": "graphql-mesh",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "mesh dev"
+  },
+  "dependencies": {
+    "@envelop/core": "^4.0.3",
+    "@graphql-mesh/cli": "^0.87.11",
+    "@graphql-mesh/grpc": "^0.95.8",
+    "@graphql-mesh/transform-naming-convention": "^0.95.8",
+    "@graphql-mesh/transform-prefix": "^0.95.8",
+    "@graphql-mesh/transform-rename": "^0.95.6",
+    "graphql": "^16.8.1"
+  }
+}
