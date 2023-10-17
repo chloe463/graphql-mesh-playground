@@ -1,0 +1,41 @@
+sources:
+  - name: Enquete
+    handler:
+      grpc:
+        source: ./enquete.proto
+        endpoint: localhost:50051
+        # metaData:
+        metaData:
+          # authorization: 'Bearer {context.headers['x-my-token']}'
+          myCustomField: '{context.myCustomField}'
+          someStaticValue: 'MyStaticValue'
+          bar: 123
+          time: '{context.currentDateTime}'
+          foo: "{context.headers['foo']}"
+transforms:
+  - rename:
+      renames:
+        - from:
+            type: Query
+            field: mypackage_enquete_EnqueteService_(.*)
+          to:
+            type: Query
+            field: $1
+          useRegExpForFields: true
+        - from:
+            type: mypackage_enquete_(.*)
+          to:
+            type: $1
+          useRegExpForTypes: true
+        - from:
+            type: (.*)_Input
+          to:
+            type: $1
+          useRegExpForTypes: true
+  - namingConvention:
+      typeNames: pascalCase
+      enumValues: upperCase
+      fieldNames: camelCase
+      fieldArgumentNames: camelCase
+additionalEnvelopPlugins: './envelopPlugins'
+
