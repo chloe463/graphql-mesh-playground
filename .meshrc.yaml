@@ -3,7 +3,7 @@ sources:
     handler:
       grpc:
         source: ./enquete.proto
-        endpoint: '{env.GRPC_SERVER_HOST}:{env.GRPC_SERVER_PORT}'
+        endpoint: '{env.GRPC_SERVER_HOST}:{env.ENQUETE_GRPC_SERVER_PORT}'
         # metaData:
         metaData:
           # authorization: 'Bearer {context.headers['x-my-token']}'
@@ -12,6 +12,11 @@ sources:
           bar: 123
           time: '{context.currentDateTime}'
           foo: "{context.headers['foo']}"
+  - name: User
+    handler:
+      grpc:
+        source: ./user.proto
+        endpoint: '{env.GRPC_SERVER_HOST}:{env.USER_GRPC_SERVER_PORT}'
 transforms:
   - rename:
       renames:
@@ -24,6 +29,18 @@ transforms:
           useRegExpForFields: true
         - from:
             type: mypackage_enquete_(.*)
+          to:
+            type: $1
+          useRegExpForTypes: true
+        - from:
+            type: Query
+            field: mypackage_user_UserService_(.*)
+          to:
+            type: Query
+            field: $1
+          useRegExpForFields: true
+        - from:
+            type: mypackage_user_(.*)
           to:
             type: $1
           useRegExpForTypes: true
