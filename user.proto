@@ -4,7 +4,8 @@ package mypackage.user;
 
 service UserService {
   rpc ListUser (ListUserRequest) returns (ListUserResponse);
-  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  // rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  rpc GetUser (GetUserRequest) returns (User);
 }
 
 message User {
