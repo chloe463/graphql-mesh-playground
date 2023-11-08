@@ -18,7 +18,7 @@ message ListUserRequest {
 }
 
 message ListUserResponse {
-  repeated User users = 1;
+  repeated User items = 1;
 }
 
 message GetUserRequest {
