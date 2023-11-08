@@ -3,7 +3,7 @@ sources:
     handler:
       grpc:
         source: ./enquete.proto
-        endpoint: '{env.GRPC_SERVER_HOST}:{env.GRPC_SERVER_PORT}'
+        endpoint: '{env.GRPC_SERVER_HOST}:{env.ENQUETE_GRPC_SERVER_PORT}'
         # metaData:
         metaData:
           # authorization: 'Bearer {context.headers['x-my-token']}'
@@ -12,30 +12,89 @@ sources:
           bar: 123
           time: '{context.currentDateTime}'
           foo: "{context.headers['foo']}"
-transforms:
-  - rename:
-      renames:
-        - from:
-            type: Query
-            field: mypackage_enquete_EnqueteService_(.*)
-          to:
-            type: Query
-            field: $1
-          useRegExpForFields: true
-        - from:
-            type: mypackage_enquete_(.*)
-          to:
-            type: $1
-          useRegExpForTypes: true
-        - from:
-            type: (.*)_Input
-          to:
-            type: $1
-          useRegExpForTypes: true
-  - namingConvention:
-      typeNames: pascalCase
-      enumValues: upperCase
-      fieldNames: camelCase
-      fieldArgumentNames: camelCase
+  - name: User
+    handler:
+      grpc:
+        source: ./user.proto
+        endpoint: '{env.GRPC_SERVER_HOST}:{env.USER_GRPC_SERVER_PORT}'
+# transforms:
+#   - rename:
+#       renames:
+#         - from:
+#             type: Query
+#             field: mypackage_enquete_EnqueteService_(.*)
+#           to:
+#             type: Query
+#             field: $1
+#           useRegExpForFields: true
+#         - from:
+#             type: mypackage_enquete_(.*)
+#           to:
+#             type: $1
+#           useRegExpForTypes: true
+#         - from:
+#             type: Query
+#             field: mypackage_user_UserService_(.*)
+#           to:
+#             type: Query
+#             field: $1
+#           useRegExpForFields: true
+#         - from:
+#             type: mypackage_user_(.*)
+#           to:
+#             type: $1
+#           useRegExpForTypes: true
+#         - from:
+#             type: (.*)_Input
+#           to:
+#             type: $1
+#           useRegExpForTypes: true
+#   - namingConvention:
+#       typeNames: pascalCase
+#       enumValues: upperCase
+#       fieldNames: camelCase
+#       fieldArgumentNames: camelCase
+additionalTypeDefs: |
+  extend type mypackage_enquete_Enquete {
+    author: mypackage_user_User @resolveTo(
+      sourceName: "User"
+      sourceTypeName: "Query",
+      sourceFieldName: "mypackage_user_UserService_GetUser",
+      # sourceFieldName: "GetUser",
+      requiredSelectionSet: "{ author_id }",
+      sourceArgs: {
+        input: {
+          id: "{root.author_id}"
+        }
+      }
+    )
+  }
 additionalEnvelopPlugins: './envelopPlugins'
 
+# sourceFieldName: "mypackage_user_UserService_ListUser",
+# keyField: "author_id",
+# keysArg: "input.user_ids"
+
+
+# additionalTypeDefs: |
+#   extend type mypackage_enquete_Enquete {
+#     author: mypackage_user_User @resolveTo(
+#       sourceName: "User"                                   # Which source does the target field belong to?
+#       sourceTypeName: "Query",                                # Which root type does the target field belong to?
+#       # sourceFieldName: "mypackage_user_UserService_GetUser", # What is the source field name?
+#       sourceFieldName: "getUser", # What is the source field name?
+#       # requiredSelectionSet: "{ authorId }",                   # What is the required selection on the target type to resolve the source field?
+#       # sourceArgs: {                                           # What args the source field does need?
+#       #   input: {
+#       #     id: "{root.authorId}"
+#       #   }
+#       # }
+#       requiredSelectionSet: "{ author_id }",                   # What is the required selection on the target type to resolve the source field?
+#       sourceArgs: {                                           # What args the source field does need?
+#         id: "{root.author_id}"
+#       }
+#       # sourceFieldName: "mypackage_user_UserService_ListUser",
+#       # keyField: "author_id",
+#       # keysArg: "input.user_ids"
+#     )
+#   }
